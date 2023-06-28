@@ -18,7 +18,7 @@ Spree.config do |config|
   # config.inventory_cache_threshold = 3
 
   # Configure adapter for attachments on products and taxons (use ActiveStorageAttachment or PaperclipAttachment)
-  config.image_attachment_module = 'Spree::Image::ActiveStorageAttachment'
+  config.active_storage.service = :google
   config.taxon_attachment_module = 'Spree::Taxon::ActiveStorageAttachment'
 
   # Defaults
