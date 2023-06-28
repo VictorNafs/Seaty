@@ -1,39 +1,39 @@
-<% provide(:title, "Planning") %>
+<% if @instances.present? %>
+  <%= form_with url: orders_populate_path, method: :post, local: true do |f| %>
+    <%= f.hidden_field :selected_date, value: @selected_date %>
 
-<h1>Planning du jour</h1>
-
-<%= form_with url: orders_populate_path, method: :post, local: true do |f| %>
-  <%= f.hidden_field :selected_date, value: @selected_date %>
-
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Produit</th>
-          <th>Créneau horaire</th>
-          <th>Sélection</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% ["8h - 13h", "14h - 20h"].each do |time_slot| %>
-          <% @instances.take(1).each_with_index do |stock_item, index| %>
-            <tr>
-              <td><%= stock_item.variant.product.name %></td>
-              <td><%= time_slot %></td>
-              <% if !time_slot_reserved?(@selected_date, time_slot, stock_item) %>
-                <td>
-<%= f.check_box :product_timeslots, { multiple: true, value: "#{stock_item.variant.product.id},#{time_slot}" }, "#{stock_item.variant.product.id},#{time_slot}", nil %>
-                  <%= f.hidden_field :time_slot, value: time_slot %>
-                </td>
-              <% else %>
-                <td>Réservé</td>
-              <% end %>
-            </tr>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Produit</th>
+            <th>Créneau horaire</th>
+            <th>Sélection</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% ["8h - 13h", "14h - 20h"].each do |time_slot| %>
+            <% @instances.take(1).each_with_index do |stock_item, index| %>
+              <tr>
+                <td><%= stock_item.variant.product.name %></td>
+                <td><%= time_slot %></td>
+                <% if !time_slot_reserved?(@selected_date, time_slot, stock_item) %>
+                  <td>
+  <%= f.check_box :product_timeslots, { multiple: true, value: "#{stock_item.variant.product.id},#{time_slot}" }, "#{stock_item.variant.product.id},#{time_slot}", nil %>
+                    <%= f.hidden_field :time_slot, value: time_slot %>
+                  </td>
+                <% else %>
+                  <td>Réservé</td>
+                <% end %>
+              </tr>
+            <% end %>
           <% end %>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+        </tbody>
+      </table>
+    </div>
 
-  <%= f.submit 'Ajouter au panier' %>
+    <%= f.submit 'Ajouter au panier' %>
+  <% end %>
+<% else %>
+  <p>Aucun créneau horaire n'est disponible pour cette date.</p>
 <% end %>
