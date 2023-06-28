@@ -69,13 +69,9 @@ end
   def reserve_products
     @order.line_items.each do |line_item|
       variant = line_item.variant
-      date = line_item.date
-      stock_movement = Spree::StockMovement.find_by(stock_item_id: variant.stock_items.first.id, date: date)
-      
-      # Mettre à jour le stock_movement pour marquer la réservation du produit
-      if stock_movement
-        stock_movement.update(reserved: true)
-      end
+  
+      # Log l'information sur le variant et la date de la commande
+      Rails.logger.info("Variant #{variant.id} reserved for line_item #{line_item.id} on date #{line_item.date}")
     end
   end
   

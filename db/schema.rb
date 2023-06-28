@@ -370,7 +370,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_223538) do
     t.integer "store_id"
     t.string "approver_name"
     t.boolean "frontend_viewable", default: true, null: false
-    t.boolean "finalized", default: false
     t.index ["approver_id"], name: "index_spree_orders_on_approver_id"
     t.index ["bill_address_id"], name: "index_spree_orders_on_bill_address_id"
     t.index ["completed_at"], name: "index_spree_orders_on_completed_at"
@@ -1219,7 +1218,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_223538) do
     t.datetime "created_at"
     t.bigint "shipping_category_id"
     t.boolean "reserved", default: false
-    t.date "date"
     t.index ["position"], name: "index_spree_variants_on_position"
     t.index ["product_id"], name: "index_spree_variants_on_product_id"
     t.index ["shipping_category_id"], name: "index_spree_variants_on_shipping_category_id"
@@ -1257,17 +1255,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_223538) do
     t.datetime "updated_at"
   end
 
-  create_table "time_slots", force: :cascade do |t|
-    t.date "date"
-    t.time "start_time"
-    t.time "end_time"
-    t.bigint "product_id"
-    t.boolean "reserved"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_time_slots_on_product_id"
-  end
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "spree_promotion_code_batches", "spree_promotions", column: "promotion_id"
@@ -1275,5 +1262,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_223538) do
   add_foreign_key "spree_tax_rate_tax_categories", "spree_tax_categories", column: "tax_category_id"
   add_foreign_key "spree_tax_rate_tax_categories", "spree_tax_rates", column: "tax_rate_id"
   add_foreign_key "spree_wallet_payment_sources", "spree_users", column: "user_id"
-  add_foreign_key "time_slots", "spree_products", column: "product_id"
 end

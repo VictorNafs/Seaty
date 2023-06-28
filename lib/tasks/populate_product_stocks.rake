@@ -21,7 +21,7 @@ namespace :product_stocks do
           if existing_stock_item.nil?
             stock_item = stock_location.stock_items.find_or_create_by(variant: variant)
             stock_movement = stock_item.stock_movements.create!(
-              quantity: 2,
+              quantity: 1,
               date: date,
               time_slot: time_slot,
               action: 'restock'
