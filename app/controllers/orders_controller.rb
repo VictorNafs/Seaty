@@ -38,9 +38,14 @@ class OrdersController < StoreController
       variant = product.master
       date = params[:selected_date].to_date
   
-      stock_movement = Spree::StockMovement.where(stock_item_id: variant.stock_items.first.id, date: date).first
+      # Vérifier si le LineItem avec la même date et le même créneau horaire existe déjà
+      existing_line_item = order.line_items.find_by(date: date, time_slot: time_slot, variant: variant)
+      if existing_line_item
+        # Si l'élément existe déjà, ne faites rien et passez au suivant
+        next
+      end
   
-      # Créer un nouvel article avec la date et le créneau horaire
+      # Si l'élément n'existe pas, créez un nouvel élément
       line_item = Spree::LineItem.new(
         order: order,
         variant: variant,
@@ -66,6 +71,7 @@ class OrdersController < StoreController
       redirect_to main_app.product_path(last_product)
     end
   end
+  
   
   
 
