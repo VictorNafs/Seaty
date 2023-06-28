@@ -15,10 +15,10 @@ local:
 #   bucket: your_own_bucket-<%= Rails.env %>
 
 # Remember not to checkin your GCS keyfile to a repository
-google: 
+google:
   service: GCS
   project: todo-pic
-  credentials: <%= ENV['GOOGLE_APPLICATION_CREDENTIALS'] %>
+  credentials: <%= ENV['GOOGLE_APPLICATION_CREDENTIALS'].as_json %>
   bucket: todo-pic
 
 google_dev: 
