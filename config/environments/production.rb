@@ -30,6 +30,20 @@ Rails.application.configure do
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
 
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.gmail.com',
+    port: 587,
+    domain: 'create-platfrm-5f9cd711cc46.herokuapp.com',
+    user_name: 'cmoikvolelorange@gmail.com',
+    password: ENV['GMAIL_PASSWORD'],
+    authentication: 'plain',
+    enable_starttls_auto: true
+  }
+  
+  config.action_mailer.default_url_options = { host: 'create-platfrm-5f9cd711cc46.herokuapp.com' }
+
+
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
@@ -60,7 +74,7 @@ Rails.application.configure do
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "solidapp_production"
+  # config.active_job.queue_name_prefix = "create_production"
 
   config.action_mailer.perform_caching = false
 
