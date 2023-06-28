@@ -79,8 +79,11 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
+# config/database.yml
 production:
   <<: *default
-  database: solidapp_production
-  username: solidapp
-  password: <%= ENV["SOLIDAPP_DATABASE_PASSWORD"] %>
+  adapter: postgresql
+  encoding: unicode
+  database: myapp_production
+  username: myapp
+  password: <%= ENV['MYAPP_DATABASE_PASSWORD'] %>
