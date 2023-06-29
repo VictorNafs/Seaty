@@ -21,6 +21,14 @@ Spree.config do |config|
   config.image_attachment_module = 'Spree::Image::ActiveStorageAttachment'
   config.taxon_attachment_module = 'Spree::Taxon::ActiveStorageAttachment'
 
+# config/initializers/spree.rb
+# config/initializers/spree.rb
+Spree.config do |config|
+  config.logo = 'logo.png'
+end
+
+
+
   # Defaults
   # Permission Sets:
 
