@@ -12,27 +12,26 @@
     <col style="width: 15%;">
   </colgroup>
 
-<tbody>
+  <thead>
+    <tr>
+      <th colspan="2"><%= Spree::Product.human_attribute_name(:name) %></th>
+      <th><%= Spree::LineItem.human_attribute_name(:price) %></th>
+      <th><%= Spree::LineItem.human_attribute_name(:quantity) %></th>
+      <th><%= Spree::LineItem.human_attribute_name(:total) %></th>
+      <th class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</th>
+    </tr>
+  </thead>
+
+  <tbody>
     <% @order.line_items.each do |line_item| %>
       <tr>
         <td colspan="2"><%= line_item.variant.product.name %></td>
-        <td>Créneau horaire :<%= line_item.time_slot %></td> <!-- Afficher le créneau horaire pour cet article -->
-        <td>Date :<%= line_item.date %></td> <!-- Afficher la date pour cet article -->
+        <td><strong>Créneau horaire :</strong><br><%= line_item.time_slot %></td> <!-- Afficher le créneau horaire pour cet article -->
+        <td><strong>Date :</strong><br><%= line_item.date %></td> <!-- Afficher la date pour cet article -->
         <td class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</td>
       </tr>
     <% end %>
   </tbody>
-
-  <thead>
-  <tr>
-    <th colspan="2"><%= Spree::Product.human_attribute_name(:name) %></th>
-    
-    <th><%= Spree::LineItem.human_attribute_name(:price) %></th>
-    <th><%= Spree::LineItem.human_attribute_name(:quantity) %></th>
-    <th><%= Spree::LineItem.human_attribute_name(:total) %></th>
-    <th class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</th>
-  </tr>
-  </thead>
 </table>
 
 <%# Votre code de pied de page ici. %>
