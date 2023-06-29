@@ -1,3 +1,5 @@
+<%# Votre code de mise en page et de navigation ici. %>
+
 <table class="line-items index" data-hook="line-items">
   <colgroup>
     <col style="width: 10%;">
@@ -13,17 +15,28 @@
   <thead>
   <tr>
     <th colspan="2"><%= Spree::Product.human_attribute_name(:name) %></th>
-    <th><%= Spree::LineItem.human_attribute_name(:time_slot) %></th> <!-- Utilisez la méthode human_attribute_name pour le créneau horaire -->
-    <th><%= Spree::LineItem.human_attribute_name(:date) %></th> <!-- Utilisez la méthode human_attribute_name pour la date -->
+    <th>Créneau horaire</th> <!-- Titre de la colonne pour le créneau horaire -->
+    <th>Date</th> <!-- Titre de la colonne pour la date -->
     <th><%= Spree::LineItem.human_attribute_name(:price) %></th>
     <th><%= Spree::LineItem.human_attribute_name(:quantity) %></th>
     <th><%= Spree::LineItem.human_attribute_name(:total) %></th>
     <th class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</th>
   </tr>
-</thead>
-
+  </thead>
 
   <tbody>
-    <%# Rendered by JS %>
+    <% @order.line_items.each do |line_item| %>
+      <tr>
+        <td colspan="2"><%= line_item.variant.product.name %></td>
+        <td><%= line_item.time_slot %></td> <!-- Afficher le créneau horaire pour cet article -->
+        <td><%= line_item.date %></td> <!-- Afficher la date pour cet article -->
+        <td><%= line_item.price %></td>
+        <td><%= line_item.quantity %></td>
+        <td><%= line_item.total %></td>
+        <td class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
+
+<%# Votre code de pied de page ici. %>
