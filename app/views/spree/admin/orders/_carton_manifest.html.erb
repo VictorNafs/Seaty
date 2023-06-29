@@ -12,8 +12,6 @@
         <%= item.variant.sku %>
       <% end %>
     </td>
-    <td><strong>Créneau horaire sélectionné :</strong> <%= item.date %> </td>
-    <td><strong>Date sélectionnée :</strong> <%= item.time_slot %></td> 
     <td class="item-price"><%= item.line_item.single_money.to_html %></td>
     <td class="item-qty-show">
         <% item.states.each do |state,count| %>
