@@ -60,7 +60,6 @@ class CheckoutsController < CheckoutBaseController
     reserve_products # Cette méthode réservera les produits
     # Réinitialiser l'ID de la commande dans les cookies
     cookies.delete(:order_id)
-    OrderMailer.order_confirmation(@order, @store).deliver_now
     redirect_to completion_route
 end
 
