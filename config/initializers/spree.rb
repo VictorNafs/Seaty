@@ -21,9 +21,6 @@ Spree.config do |config|
   config.image_attachment_module = 'Spree::Image::ActiveStorageAttachment'
   config.taxon_attachment_module = 'Spree::Taxon::ActiveStorageAttachment'
 
-  config.allowed_image_types = %w(image/jpeg image/png image/gif)
-
-
   # Defaults
   # Permission Sets:
 
