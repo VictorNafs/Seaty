@@ -12,16 +12,7 @@
     <col style="width: 15%;">
   </colgroup>
 
-<tbody>
-    <% @order.line_items.each do |line_item| %>
-      <tr>
-        <td colspan="2"><%= line_item.variant.product.name %></td>
-        <td>Créneau horaire :<%= line_item.time_slot %></td> <!-- Afficher le créneau horaire pour cet article -->
-        <td>Date :<%= line_item.date %></td> <!-- Afficher la date pour cet article -->
-        <td class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</td>
-      </tr>
-    <% end %>
-  </tbody>
+
 
   <thead>
   <tr>
@@ -33,6 +24,10 @@
     <th class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</th>
   </tr>
   </thead>
+
+  <p>Créneau horaire :<%= line_item.time_slot %></p>
+    <p>Date :<%= line_item.date %></p>
+    
 </table>
 
 <%# Votre code de pied de page ici. %>
