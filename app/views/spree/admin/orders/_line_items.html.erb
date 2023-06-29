@@ -13,8 +13,8 @@
   <thead>
   <tr>
     <th colspan="2"><%= Spree::Product.human_attribute_name(:name) %></th>
-    <th>Créneau horaire</th><%= line_item.time_slot %> <!-- Titre de la colonne pour le créneau horaire -->
-    <th>Date</th><%= line_item.date %> <!-- Titre de la colonne pour la date -->
+    <th><th>Créneau horaire</th><%= line_item.time_slot %></th> <!-- Titre de la colonne pour le créneau horaire -->
+    <th><th>Date</th><%= line_item.date %></th> <!-- Titre de la colonne pour la date -->
     <th><%= Spree::LineItem.human_attribute_name(:price) %></th>
     <th><%= Spree::LineItem.human_attribute_name(:quantity) %></th>
     <th><%= Spree::LineItem.human_attribute_name(:total) %></th>
