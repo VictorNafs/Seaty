@@ -12,6 +12,17 @@
     <col style="width: 15%;">
   </colgroup>
 
+<tbody>
+    <% @order.line_items.each do |line_item| %>
+      <tr>
+        <td colspan="2"><%= line_item.variant.product.name %></td>
+        <td>Créneau horaire<%= line_item.time_slot %></td> <!-- Afficher le créneau horaire pour cet article -->
+        <td>Date<%= line_item.date %></td> <!-- Afficher la date pour cet article -->
+        <td class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</td>
+      </tr>
+    <% end %>
+  </tbody>
+
   <thead>
   <tr>
     <th colspan="2"><%= Spree::Product.human_attribute_name(:name) %></th>
@@ -22,17 +33,6 @@
     <th class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</th>
   </tr>
   </thead>
-
-  <tbody>
-    <% @order.line_items.each do |line_item| %>
-      <tr>
-        <td colspan="2"><%= line_item.variant.product.name %></td>
-        <td>Créneau horaire<%= line_item.time_slot %></td> <!-- Afficher le créneau horaire pour cet article -->
-        <td>Date<%= line_item.date %></td> <!-- Afficher la date pour cet article -->
-        <td class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</td>
-      </tr>
-    <% end %>
-  </tbody>
 </table>
 
 <%# Votre code de pied de page ici. %>
