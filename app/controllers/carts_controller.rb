@@ -6,6 +6,7 @@ class CartsController < StoreController
   respond_to :html
 
   before_action :store_guest_token
+  before_action :ensure_logged_in, only: [:edit]
   before_action :assign_order, only: :update
   # note: do not lock the #edit action because that's where we redirect when we fail to acquire a lock
   around_action :lock_order, only: :update
@@ -50,6 +51,12 @@ class CartsController < StoreController
 
   private
 
+  def ensure_logged_in
+    unless spree_current_user
+      redirect_to login_path, notice: 'Veuillez vous connecter pour accéder à votre panier.'
+    end
+  end
+
   def accurate_title
     t('spree.shopping_cart')
   end
@@ -73,5 +80,4 @@ class CartsController < StoreController
       redirect_to(root_path) && return
     end
   end
-
 end
