@@ -39,14 +39,14 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address: 'smtp.gmail.com',
     port: 587,
-    domain: 'seaty-platfrm-201a97036f53.herokuapp.com/',
+    domain: 'seaty-app-03ce730ea296.herokuapp.com/',
     user_name: 'cmoikvolelorange@gmail.com',
     password: ENV['GMAIL_PASSWORD'],
     authentication: 'plain',
     enable_starttls_auto: true
   }
   
-  config.action_mailer.default_url_options = { host: 'seaty-platfrm-201a97036f53.herokuapp.com/' }
+  config.action_mailer.default_url_options = { host: 'seaty-app-03ce730ea296.herokuapp.com' }
 
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
