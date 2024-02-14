@@ -15,33 +15,34 @@ class CartsController < StoreController
   def edit
     @order = current_order(build_order_if_necessary: true)
     authorize! :edit, @order, cookies.signed[:guest_token]
-  
+    
     @order.line_items.each do |line_item|
-      if line_item_reserved?(line_item)
+      # Vous aurez besoin d'adapter cette logique pour extraire la date et le créneau horaire du line_item.
+      date, time_slot = extract_reservation_info(line_item)
+      
+      if product_reserved_and_purchased?(line_item.variant_id, date, time_slot)
         @order.contents.remove(line_item.variant, line_item.quantity)
-        flash[:notice] = "Un ou plusieurs créneaux horaires réservés ont été retirés de votre panier."
+        flash[:notice] = "Un ou plusieurs créneaux horaires réservés ont été retirés de votre panier car ils ont été achetés."
       end
     end
-  
+    
     redirect_to edit_cart_path if flash[:notice].present?
   end
   
+  private
   
-  def line_item_reserved?(line_item)
-    # Exemple fictif basé sur des métadonnées stockées dans le line_item
-    # Cet exemple suppose que vous avez des champs ou des métadonnées indiquant la réservation
-    date = line_item.metadata['reservation_date']
-    time_slot = line_item.metadata['time_slot']
-    
-    # Ici, vous devriez implémenter votre logique pour vérifier si ce créneau est effectivement réservé.
-    # Cette vérification pourrait dépendre de la manière dont votre application gère les réservations.
-    # Par exemple, vérifier s'il y a un conflit de réservation dans les commandes complétées.
-    
-    # Exemple fictif de vérification :
-    # Supposons que vous avez une méthode qui peut vérifier les conflits basée sur la date et le créneau horaire.
-    check_reservation_conflict(date, time_slot)
+  def product_reserved_and_purchased?(variant_id, date, time_slot)
+    Spree::Order.joins(line_items: { variant: :stock_items })
+                .where(spree_stock_items: { stock_movements: { date: date, time_slot: time_slot }})
+                .where.not(state: 'cart')
+                .exists?
   end
   
+  def extract_reservation_info(line_item)
+    # Implémentez cette méthode en fonction de la façon dont vous stockez/associez les informations de date et de créneau horaire aux line_items.
+    # Cette méthode doit retourner [date, time_slot] pour le line_item donné.
+    [line_item.reservation_date, line_item.time_slot] # Exemple fictif, à adapter selon votre implémentation.
+  end
   
 
   def update
