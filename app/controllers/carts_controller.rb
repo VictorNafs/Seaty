@@ -17,15 +17,22 @@ class CartsController < StoreController
     authorize! :edit, @order, cookies.signed[:guest_token]
   
     @order.line_items.each do |line_item|
-      # Supposons que vous avez une manière de déterminer si le créneau est réservé.
-      # Cette logique dépend de la structure de vos données.
-      if line_item_reserved?(line_item) # Cette méthode doit être implémentée ou adaptée.
+      if line_item_reserved?(line_item)
         @order.contents.remove(line_item.variant, line_item.quantity)
         flash[:notice] = "Un ou plusieurs créneaux horaires réservés ont été retirés de votre panier."
       end
     end
   
     redirect_to edit_cart_path if flash[:notice].present?
+  end
+  
+  
+  def line_item_reserved?(line_item)
+    # Exemple de logique pour vérifier si un line_item est réservé.
+    # Cette implémentation dépend de votre application et de la manière dont vous stockez les informations de réservation.
+    # Pour cet exemple, supposons que vous pouvez vérifier si un line_item est réservé en interrogeant une table de réservation ou en utilisant un attribut du line_item.
+    reservation = Spree::Reservation.find_by(line_item_id: line_item.id, state: 'reserved')
+    reservation.present?
   end
   
 
