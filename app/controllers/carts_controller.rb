@@ -16,19 +16,16 @@ class CartsController < StoreController
     @order = current_order(build_order_if_necessary: true)
     authorize! :edit, @order, cookies.signed[:guest_token]
   
-    # Nouvelle logique pour vérifier la disponibilité des créneaux horaires
     @order.line_items.each do |line_item|
-      product = line_item.variant.product
-      unless product.available? # Vous devez implémenter cette méthode `available?` dans votre modèle Product
+      # Supposons que vous avez une manière de déterminer si le créneau est réservé.
+      # Cette logique dépend de la structure de vos données.
+      if line_item_reserved?(line_item) # Cette méthode doit être implémentée ou adaptée.
         @order.contents.remove(line_item.variant, line_item.quantity)
-        flash[:notice] = "Certains articles n'étaient plus disponibles et ont été retirés de votre panier."
+        flash[:notice] = "Un ou plusieurs créneaux horaires réservés ont été retirés de votre panier."
       end
     end
   
-    if params[:id] && @order.number != params[:id]
-      flash[:error] = t('spree.cannot_edit_orders')
-      redirect_to edit_cart_path
-    end
+    redirect_to edit_cart_path if flash[:notice].present?
   end
   
 
