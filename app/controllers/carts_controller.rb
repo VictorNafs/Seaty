@@ -15,37 +15,21 @@ class CartsController < StoreController
   def edit
     @order = current_order(build_order_if_necessary: true)
     authorize! :edit, @order, cookies.signed[:guest_token]
-    
-    @order.line_items.each do |line_item|
-      # Vous aurez besoin d'adapter cette logique pour extraire la date et le créneau horaire du line_item.
-      date, time_slot = extract_reservation_info(line_item)
       
-      if product_reserved_and_purchased?(line_item.variant_id, date, time_slot)
+    @order.line_items.to_a.each do |line_item|
+      date = line_item.date
+      time_slot = line_item.time_slot
+    
+      if time_slot_reserved?(date, time_slot, line_item)
         @order.contents.remove(line_item.variant, line_item.quantity)
-        flash[:notice] = "Un ou plusieurs créneaux horaires réservés ont été retirés de votre panier car ils ont été achetés."
+        flash[:notice] = "Un ou plusieurs créneaux horaires ont été retirés de votre panier car ils sont maintenant réservés."
       end
     end
     
     redirect_to edit_cart_path if flash[:notice].present?
   end
   
-  private
-  
-  def product_reserved_and_purchased?(variant_id, date, time_slot)
-    Spree::Order.joins(line_items: { variant: :stock_items })
-                .where(spree_stock_items: { stock_movements: { date: date, time_slot: time_slot }})
-                .where.not(state: 'cart')
-                .exists?
-  end
-  
-  def extract_reservation_info(line_item)
-    # Utilisez directement les attributs existants sur l'objet line_item
-    date = line_item.date
-    time_slot = line_item.time_slot
-  
-    [date, time_slot]
-  end
-  
+
   def update
     authorize! :update, @order, cookies.signed[:guest_token]
     if @order.contents.update_cart(order_params)
