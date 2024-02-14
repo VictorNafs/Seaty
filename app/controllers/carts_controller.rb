@@ -15,11 +15,26 @@ class CartsController < StoreController
   def edit
     @order = current_order(build_order_if_necessary: true)
     authorize! :edit, @order, cookies.signed[:guest_token]
-    if params[:id] && @order.number != params[:id]
-      flash[:error] = t('spree.cannot_edit_orders')
-      redirect_to edit_cart_path
+  
+    @order.line_items.each do |line_item|
+      if line_item_reserved?(line_item)
+        @order.contents.remove(line_item.variant, line_item.quantity)
+        flash[:notice] = "Un ou plusieurs créneaux horaires réservés ont été retirés de votre panier."
+      end
     end
+  
+    redirect_to edit_cart_path if flash[:notice].present?
   end
+  
+  
+  def line_item_reserved?(line_item)
+    # Exemple de logique pour vérifier si un line_item est réservé.
+    # Cette implémentation dépend de votre application et de la manière dont vous stockez les informations de réservation.
+    # Pour cet exemple, supposons que vous pouvez vérifier si un line_item est réservé en interrogeant une table de réservation ou en utilisant un attribut du line_item.
+    reservation = Spree::Reservation.find_by(line_item_id: line_item.id, state: 'reserved')
+    reservation.present?
+  end
+  
 
   def update
     authorize! :update, @order, cookies.signed[:guest_token]
