@@ -28,12 +28,20 @@ class CartsController < StoreController
   
   
   def line_item_reserved?(line_item)
-    # Exemple de logique pour vérifier si un line_item est réservé.
-    # Cette implémentation dépend de votre application et de la manière dont vous stockez les informations de réservation.
-    # Pour cet exemple, supposons que vous pouvez vérifier si un line_item est réservé en interrogeant une table de réservation ou en utilisant un attribut du line_item.
-    reservation = Spree::Reservation.find_by(line_item_id: line_item.id, state: 'reserved')
-    reservation.present?
+    # Exemple fictif basé sur des métadonnées stockées dans le line_item
+    # Cet exemple suppose que vous avez des champs ou des métadonnées indiquant la réservation
+    date = line_item.metadata['reservation_date']
+    time_slot = line_item.metadata['time_slot']
+    
+    # Ici, vous devriez implémenter votre logique pour vérifier si ce créneau est effectivement réservé.
+    # Cette vérification pourrait dépendre de la manière dont votre application gère les réservations.
+    # Par exemple, vérifier s'il y a un conflit de réservation dans les commandes complétées.
+    
+    # Exemple fictif de vérification :
+    # Supposons que vous avez une méthode qui peut vérifier les conflits basée sur la date et le créneau horaire.
+    check_reservation_conflict(date, time_slot)
   end
+  
   
 
   def update
