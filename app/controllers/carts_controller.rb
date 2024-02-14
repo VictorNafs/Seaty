@@ -15,11 +15,22 @@ class CartsController < StoreController
   def edit
     @order = current_order(build_order_if_necessary: true)
     authorize! :edit, @order, cookies.signed[:guest_token]
+  
+    # Nouvelle logique pour vérifier la disponibilité des créneaux horaires
+    @order.line_items.each do |line_item|
+      product = line_item.variant.product
+      unless product.available? # Vous devez implémenter cette méthode `available?` dans votre modèle Product
+        @order.contents.remove(line_item.variant, line_item.quantity)
+        flash[:notice] = "Certains articles n'étaient plus disponibles et ont été retirés de votre panier."
+      end
+    end
+  
     if params[:id] && @order.number != params[:id]
       flash[:error] = t('spree.cannot_edit_orders')
       redirect_to edit_cart_path
     end
   end
+  
 
   def update
     authorize! :update, @order, cookies.signed[:guest_token]
