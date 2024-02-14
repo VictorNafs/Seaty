@@ -39,12 +39,13 @@ class CartsController < StoreController
   end
   
   def extract_reservation_info(line_item)
-    # Implémentez cette méthode en fonction de la façon dont vous stockez/associez les informations de date et de créneau horaire aux line_items.
-    # Cette méthode doit retourner [date, time_slot] pour le line_item donné.
-    [line_item.reservation_date, line_item.time_slot] # Exemple fictif, à adapter selon votre implémentation.
+    # Utilisez directement les attributs existants sur l'objet line_item
+    date = line_item.date
+    time_slot = line_item.time_slot
+  
+    [date, time_slot]
   end
   
-
   def update
     authorize! :update, @order, cookies.signed[:guest_token]
     if @order.contents.update_cart(order_params)
