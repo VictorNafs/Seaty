@@ -15,20 +15,11 @@ class CartsController < StoreController
   def edit
     @order = current_order(build_order_if_necessary: true)
     authorize! :edit, @order, cookies.signed[:guest_token]
-      
-    @order.line_items.to_a.each do |line_item|
-      date = line_item.date
-      time_slot = line_item.time_slot
-    
-      if time_slot_reserved?(date, time_slot, line_item)
-        @order.contents.remove(line_item.variant, line_item.quantity)
-        flash[:notice] = "Un ou plusieurs créneaux horaires ont été retirés de votre panier car ils sont maintenant réservés."
-      end
+    if params[:id] && @order.number != params[:id]
+      flash[:error] = t('spree.cannot_edit_orders')
+      redirect_to edit_cart_path
     end
-    
-    redirect_to edit_cart_path if flash[:notice].present?
   end
-  
 
   def update
     authorize! :update, @order, cookies.signed[:guest_token]
