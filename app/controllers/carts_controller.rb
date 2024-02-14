@@ -14,22 +14,10 @@ class CartsController < StoreController
   # Shows the current incomplete order from the session
   def edit
     @order = current_order(build_order_if_necessary: true)
-    check_and_remove_unavailable_items(@order)
     authorize! :edit, @order, cookies.signed[:guest_token]
     if params[:id] && @order.number != params[:id]
       flash[:error] = t('spree.cannot_edit_orders')
       redirect_to edit_cart_path
-    end
-  end
-
-  private
-
-  def check_and_remove_unavailable_items(order)
-    order.line_items.each do |item|
-      unless item.variant.product.available? # Vous devez définir la méthode `available?` dans votre modèle de produit.
-        order.contents.remove(item.variant, item.quantity)
-        flash[:notice] = "Certains articles n'étaient plus disponibles et ont été retirés de votre panier."
-      end
     end
   end
 
