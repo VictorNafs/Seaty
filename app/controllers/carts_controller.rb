@@ -8,31 +8,42 @@ class CartsController < StoreController
   before_action :store_guest_token
   before_action :ensure_logged_in, only: [:edit]
   before_action :assign_order, only: :update
-  # note: do not lock the #edit action because that's where we redirect when we fail to acquire a lock
+  before_action :remove_reserved_time_slots, only: [:edit, :update]
   around_action :lock_order, only: :update
 
   # Shows the current incomplete order from the session
   def edit
     @order = current_order(build_order_if_necessary: true)
     authorize! :edit, @order, cookies.signed[:guest_token]
-      
-    @order.line_items.each do |line_item|
-      stock_item_id = line_item.variant.stock_items.first.id
-      if stock_item_reserved?(stock_item_id)
-        @order.contents.remove(line_item.variant, line_item.quantity)
-        flash[:notice] = "Un ou plusieurs créneaux horaires ont été retirés de votre panier car ils ne sont plus disponibles."
-      end
+    if params[:id] && @order.number != params[:id]
+      flash[:error] = t('spree.cannot_edit_orders')
+      redirect_to edit_cart_path
     end
-    
-    redirect_to edit_cart_path if flash[:notice].present?
   end
   
   private
   
-  def stock_item_reserved?(stock_item_id)
-    # Votre logique pour déterminer si le stock_item (créneau horaire) est réservé
-    # Cela pourrait impliquer de vérifier une association ou un attribut qui indique si le stock_item a été "acheté" ou non
+  def remove_reserved_time_slots
+    @order = current_order
+    return unless @order
+  
+    @order.line_items.each do |line_item|
+      # Vérifiez si le créneau horaire associé au line_item est réservé.
+      if time_slot_reserved?(line_item)
+        @order.contents.remove(line_item.variant, line_item.quantity)
+        flash[:alert] = "Certains créneaux horaires ont été retirés de votre panier car ils ne sont plus disponibles."
+      end
+    end
   end
+
+  def time_slot_reserved?(line_item)
+    # Exemple de vérification basée sur une hypothétique relation ou un champ indiquant le statut de réservation.
+    # Vous devrez adapter cette logique en fonction de la manière dont votre application suit les créneaux réservés.
+    
+    # Si vous avez par exemple une table ou un champ indiquant les réservations, vous pourriez faire quelque chose comme :
+    Reservation.exists?(product_id: line_item.variant.product_id, start_time: line_item.date.beginning_of_day..line_item.date.end_of_day)
+  end
+  
   
 
   def update
