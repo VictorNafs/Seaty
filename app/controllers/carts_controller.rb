@@ -13,27 +13,27 @@ class CartsController < StoreController
 
   # Shows the current incomplete order from the session
   def edit
-  @order = current_order(build_order_if_necessary: true)
-  authorize! :edit, @order, cookies.signed[:guest_token]
-    
-  @order.line_items.each do |line_item|
-    # Supposons que line_item a des attributs :date et :time_slot
-    if time_slot_no_longer_available?(line_item.date, line_item.time_slot)
-      @order.contents.remove(line_item.variant, line_item.quantity)
-      flash[:notice] = "Un ou plusieurs créneaux horaires ont été retirés de votre panier."
+    @order = current_order(build_order_if_necessary: true)
+    authorize! :edit, @order, cookies.signed[:guest_token]
+      
+    @order.line_items.each do |line_item|
+      stock_item_id = line_item.variant.stock_items.first.id
+      if stock_item_reserved?(stock_item_id)
+        @order.contents.remove(line_item.variant, line_item.quantity)
+        flash[:notice] = "Un ou plusieurs créneaux horaires ont été retirés de votre panier car ils ne sont plus disponibles."
+      end
     end
+    
+    redirect_to edit_cart_path if flash[:notice].present?
   end
-
-  redirect_to edit_cart_path if flash[:notice].present?
-end
-
-private
-
-def time_slot_no_longer_available?(date, time_slot)
-  # Implémentez la logique pour déterminer si le créneau est toujours disponible
-  # Cela pourrait impliquer de vérifier si le créneau est inclus dans une commande complétée
-end
-
+  
+  private
+  
+  def stock_item_reserved?(stock_item_id)
+    # Votre logique pour déterminer si le stock_item (créneau horaire) est réservé
+    # Cela pourrait impliquer de vérifier une association ou un attribut qui indique si le stock_item a été "acheté" ou non
+  end
+  
 
   def update
     authorize! :update, @order, cookies.signed[:guest_token]
