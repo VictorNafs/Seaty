@@ -37,11 +37,21 @@ class CartsController < StoreController
   end
 
   def time_slot_reserved?(line_item)
-    # Exemple de vérification basée sur une hypothétique relation ou un champ indiquant le statut de réservation.
-    # Vous devrez adapter cette logique en fonction de la manière dont votre application suit les créneaux réservés.
+    # Supposition: line_item est associé à un produit qui a un stock_movement.
+    # Vous aurez besoin d'identifier ce stock_movement pour le produit.
     
-    # Si vous avez par exemple une table ou un champ indiquant les réservations, vous pourriez faire quelque chose comme :
-    Reservation.exists?(product_id: line_item.variant.product_id, start_time: line_item.date.beginning_of_day..line_item.date.end_of_day)
+    # Exemple de récupération d'un stock_movement pour le produit lié au line_item.
+    # Ceci est purement hypothétique et doit être adapté à votre logique d'application.
+    stock_movement = Spree::StockMovement.find_by(variant_id: line_item.variant_id)
+    
+    # Vérifiez si une réservation existe pour le même créneau horaire.
+    if stock_movement
+      Reservation.where("start_time >= ? AND start_time < ?", line_item.date.beginning_of_day, line_item.date.end_of_day)
+                 .where("time_slot = ?", stock_movement.time_slot)
+                 .exists?
+    else
+      false
+    end
   end
   
   
