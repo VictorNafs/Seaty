@@ -1,24 +1,47 @@
-# README
+Seaty - App de Réservation de Véhicules
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Description
 
-Things you may want to cover:
+Seaty est une application de réservation de véhicules basée sur un site e-commerce modifié. L'application permet aux utilisateurs de parcourir les véhicules disponibles, de les ajouter à leur panier, et de finaliser leur réservation. Cependant, elle présente encore quelques bugs connus, notamment des problèmes de panier persistant et des erreurs nécessitant un redémarrage du serveur.
 
-* Ruby version
+Fonctionnalités
 
-* System dependencies
+- Parcourir les véhicules disponibles
+- Ajouter des véhicules au panier
+- Finaliser les réservations
 
-* Configuration
+Problèmes connus
 
-* Database creation
+- Les bugs disparaissent temporairement après le redémarrage du serveur.
+- Les véhicules réservés ne sont pas retirés des paniers des autres utilisateurs après l'achat.
 
-* Database initialization
+Installation
 
-* How to run the test suite
+Pour installer et configurer cette application sur votre machine locale, suivez ces étapes :
 
-* Services (job queues, cache servers, search engines, etc.)
+Clonez le dépôt :
 
-* Deployment instructions
+- "git clone git@github.com:VictorNafs/Seaty.git"
+- "cd Seaty"
 
-* ...
+Installez les dépendances nécessaires :
+
+- "bundle install"
+
+Créez et configurez la base de données :
+
+- "rails db:create"
+- "rails db:migrate"
+- "rails db:seed"
+
+Démarrez le serveur Rails :
+
+- "rails server"
+
+Accédez à l'application via http://localhost:3000 dans votre navigateur.
+
+Contributions
+
+Toute aide pour corriger les bugs ou améliorer les fonctionnalités est la bienvenue ! Si vous souhaitez contribuer :
+
+Contactez moi : cmoikvolelorange@gmail.com

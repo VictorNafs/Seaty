@@ -8,7 +8,7 @@ class CartsController < StoreController
   before_action :store_guest_token
   before_action :ensure_logged_in, only: [:edit]
   before_action :assign_order, only: :update
-  before_action :remove_reserved_time_slots, only: [:edit, :update]
+  # note: do not lock the #edit action because that's where we redirect when we fail to acquire a lock
   around_action :lock_order, only: :update
 
   # Shows the current incomplete order from the session
@@ -20,41 +20,6 @@ class CartsController < StoreController
       redirect_to edit_cart_path
     end
   end
-  
-  private
-  
-  def remove_reserved_time_slots
-    @order = current_order
-    return unless @order
-  
-    @order.line_items.each do |line_item|
-      # Vérifiez si le créneau horaire associé au line_item est réservé.
-      if time_slot_reserved?(line_item)
-        @order.contents.remove(line_item.variant, line_item.quantity)
-        flash[:alert] = "Certains créneaux horaires ont été retirés de votre panier car ils ne sont plus disponibles."
-      end
-    end
-  end
-
-  def time_slot_reserved?(line_item)
-    # Supposition: line_item est associé à un produit qui a un stock_movement.
-    # Vous aurez besoin d'identifier ce stock_movement pour le produit.
-    
-    # Exemple de récupération d'un stock_movement pour le produit lié au line_item.
-    # Ceci est purement hypothétique et doit être adapté à votre logique d'application.
-    stock_movement = Spree::StockMovement.find_by(variant_id: line_item.variant_id)
-    
-    # Vérifiez si une réservation existe pour le même créneau horaire.
-    if stock_movement
-      Reservation.where("start_time >= ? AND start_time < ?", line_item.date.beginning_of_day, line_item.date.end_of_day)
-                 .where("time_slot = ?", stock_movement.time_slot)
-                 .exists?
-    else
-      false
-    end
-  end
-  
-  
 
   def update
     authorize! :update, @order, cookies.signed[:guest_token]
